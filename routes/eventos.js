@@ -3,6 +3,12 @@ const router = express.Router();
 const { nanoid } = require("nanoid");
 
 const idLength = 8;
+/*prueba*/
+router.get("/", (req, res) => {
+	const eventos = req.app.db.("eventos")
+	res.send(eventos)
+	
+})
 
 /**
  * @swagger
