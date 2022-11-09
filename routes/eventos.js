@@ -3,6 +3,45 @@ const router = express.Router();
 const { nanoid } = require("nanoid");
 
 const idLength = 8;
+/*prueba*/
+router.get("/", (req, res) => {
+	const eventos = req.app.db.get("eventos")
+	res.send(eventos)
+	
+})
+
+router.get("/id:", (req, res) => {
+	const eventos = req.app.db.get("eventos").find({ id: req.params.id}).value()
+	res.send(eventos)	
+})
+
+router.post("/", (req, res) => {
+	try{
+		const eventos = {
+			id: nanoid(idLength),
+			...req.body			
+		}
+		req.app.db.get("eventos").push(eventos).write()
+	}catch(error){
+		return res.status(500).send(error)
+	}
+})
+router.put("/:id", (req, res) => {
+	try{
+		req.app.db.get("eventos").find ({ id: req.params.id}).assign(req.body).write()
+		res.send(req.app.db.get("eventos").find({id:req.params.id}))
+	}catch(error){
+		return res.status(500).send(error)
+	}
+})
+
+router.delete("/:id", (req, res) => {
+	req.app.db.get("eventos").remove({id:req.params.id}).write()
+	
+	res.sendStatus(200)	
+})
+
+module.exports = router;
 
 /**
  * @swagger
